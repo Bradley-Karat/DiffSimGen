@@ -1,0 +1,2 @@
+# Diffusion Simulator Generator
+Python toolbox for generating simulated diffusion MRI data using biophysical or signal models. Uses [DMIPY](https://github.com/AthenaEPI/dmipy) and [DIPY](https://dipy.org/) for building models. See the `example_diffsimgen.ipynb` file for an example of how to use the toolbox.

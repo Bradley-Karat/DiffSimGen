@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "diffsimgen"
+version = "0.1.0"
+description = ""
+authors = ["Bradley-Karat <bkarat@uwo.ca>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+numpy = "*"
+nibabel = "*"
+dmipy = "*"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
