@@ -4,12 +4,16 @@ version = "0.1.0"
 description = ""
 authors = ["Bradley-Karat <bkarat@uwo.ca>"]
 readme = "README.md"
+packages = [{include = "diffsimgen"}]
+
+[tool.poetry.scripts]
+diffsimgen = "diffsimgen.run:main"
 
 [tool.poetry.dependencies]
 python = "^3.7"
-numpy = "*"
-nibabel = "*"
-dmipy = "*"
+numpy = ">=1.21.0"
+nibabel = ">=3.2.1"
+dmipy = ">=1.0.5"
 
 [build-system]
 requires = ["poetry-core"]
