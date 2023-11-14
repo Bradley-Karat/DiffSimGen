@@ -2,7 +2,7 @@ from diffsimgen.scripts import helper_functions
 from diffsimgen.scripts import generate_training_data
 import numpy as np
 
-def diffsimrun(model,bval,bvec,S0,SNR,numofsim=100000):
+def diffsimrun(model,bval,bvec,S0,SNR,numofsim=100000,delta=None,Delta=None,TE=None):
 
   '''
 
@@ -29,6 +29,12 @@ def diffsimrun(model,bval,bvec,S0,SNR,numofsim=100000):
   numofsim: 
     Number of simulations to perform (i.e. how many random microstructural
     environments should data be simulated from) (default=100000).
+  delta: 
+    Pulse duration time in seconds (default=None)
+  Delta: 
+    Pulse sedperation time in seconds (default=None)
+  TE: 
+    Echo time (default=None)
   Note, if you want to change fixed parameters (for example, in NODDI the free
   diffusivity and parallel diffusivity are fixed) this can be adjusted
   in the models.py file)
@@ -53,7 +59,7 @@ def diffsimrun(model,bval,bvec,S0,SNR,numofsim=100000):
   else:
     S0arr = np.tile(S0,int(np.ceil(numofsim/len(S0)))) #if len(S0) > 2 then assume that someone wants to generate signal using all provided S0 values
 
-  acq_scheme = helper_functions.get_acq_scheme(bval,bvec)
+  acq_scheme = helper_functions.get_acq_scheme(bval,bvec,delta,Delta,TE)
   function = getattr(generate_training_data, f'{model}')
     
   signal,parameters,parameter_names = function(numofsim,acq_scheme,S0arr,SNRarr)

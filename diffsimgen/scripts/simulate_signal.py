@@ -19,8 +19,9 @@ class simulate_SNR_signal:
   def simulate_noisy_signal(self):
     self.numofdata = self.acq_scheme.number_of_measurements
     sigma = self.S0 / self.SNR #SNR = S0 / std(noise)
-    noise1 = np.random.normal(0, sigma, size=self.numofdata)
-    self.noisy_signal = self.simulate_true_signal() + noise1
+    real = self.simulate_true_signal() + np.random.normal(0, sigma, size=self.numofdata)
+    imag = self.simulate_true_signal() + np.random.normal(0, sigma, size=self.numofdata)
+    self.noisy_signal = np.sqrt(real**2 + imag**2)
     return self.noisy_signal
 
 class simulate_noisemap_signal:
