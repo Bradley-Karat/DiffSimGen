@@ -1,5 +1,4 @@
 import numpy as np
-import pickle
 import json
 
 class generate_model_parameter_array:

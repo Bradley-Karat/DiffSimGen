@@ -24,20 +24,19 @@ def diffsimrun(model,bval,bvec,S0,SNR,numofsim=100000,delta=None,Delta=None,TE=N
   SNR: 
     Signal to noise ratio. Example -> 40, [10,50], [10,20,30,40,50]
     Idea is the same as the S0 variable above.
-    *Gaussian noise will be added to the signal as: std(noise) = S0 / SNR
-    then sample from a Gaussian of mu=0 and std=noise.
+    *Gaussian noise will be added to real and imag signal then combined
   numofsim: 
     Number of simulations to perform (i.e. how many random microstructural
     environments should data be simulated from) (default=100000).
   delta: 
     Pulse duration time in seconds (default=None)
   Delta: 
-    Pulse sedperation time in seconds (default=None)
+    Pulse seperation time in seconds (default=None)
   TE: 
     Echo time (default=None)
   Note, if you want to change fixed parameters (for example, in NODDI the free
   diffusivity and parallel diffusivity are fixed) this can be adjusted
-  in the models.py file)
+  in the models.py file
 
   returns:
     normalized signal (S/S0), microstructure parameters, and the name of the 
