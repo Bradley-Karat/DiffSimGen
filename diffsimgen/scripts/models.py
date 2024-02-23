@@ -56,3 +56,70 @@ class NODDI_watson: #Input to class NODDI is all parameters needed to build the 
             partial_volume_0=self.ball_frac,partial_volume_1=self.watson_frac)
         
         return NODDI_watson_model,model_vector
+
+class stick: 
+    def __init__(self,mu,Dpar): #Orientation and parallel diffusivity
+        '''
+        mu: Orientation of stick
+        Dpar: Stick parallel diffusivity
+        '''
+        self.mu = mu
+        self.Dpar = Dpar
+
+    def make_model(self):
+        
+        stick = cylinder_models.C1Stick()
+        
+        with suppress_stdout():
+            stick_model = MultiCompartmentModel(models=[stick])
+        
+        model_vector = stick_model.parameters_to_parameter_vector(
+            C1Stick_1_lambda_par=self.Dpar, C1Stick_1_mu=self.mu)
+        
+        return stick_model,model_vector
+
+class ball: 
+    def __init__(self,Diso): #Orientation and parallel diffusivity
+        '''
+        Diso: Ball isotropic diffusivity
+        '''
+        self.Diso = Diso
+
+    def make_model(self):
+        ball = gaussian_models.G1Ball()
+
+        with suppress_stdout():
+            ball_model = MultiCompartmentModel(models=[ball])
+        
+        model_vector = ball_model.parameters_to_parameter_vector(
+            G1Ball_1_lambda_iso=self.Diso)
+        
+        return ball_model,model_vector
+
+class ball_stick:
+    def __init__(self,mu,Dpar,stick_frac,Diso,ball_frac):
+        '''
+        mu: Orientation of stick
+        Dpar: Stick parallel diffusivity
+        stick_frac: stick signal fraction
+        Diso: Ball isotropic diffusivity
+        ball_frac: ball signal fraction
+        '''
+        self.mu = mu
+        self.Dpar = Dpar
+        self.stick_frac = stick_frac
+        self.Diso = Diso
+        self.ball_frac = ball_frac
+
+    def make_model(self):
+        ball = gaussian_models.G1Ball()
+        stick = cylinder_models.C1Stick()
+
+        with suppress_stdout():
+            ball_stick_model = MultiCompartmentModel(models=[ball,stick])
+        
+        model_vector = ball_stick_model.parameters_to_parameter_vector(C1Stick_1_mu=self.mu,
+            C1Stick_1_lambda_par=self.Dpar, partial_volume_0=self.ball_frac,
+            partial_volume_1=self.stick_frac,G1Ball_1_lambda_iso=self.Diso)
+        
+        return ball_stick_model,model_vector
