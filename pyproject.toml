@@ -13,7 +13,8 @@ diffsimgen = "diffsimgen.run:main"
 python = "^3.7"
 numpy = ">=1.21.0"
 nibabel = ">=3.2.1"
-dmipy = ">=1.0.5"
+#dmipy = ">=1.0.5"
+dmipy = { git = "https://github.com/Bradley-Karat/dmipy.git" }
 
 [build-system]
 requires = ["poetry-core"]
