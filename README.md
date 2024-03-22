@@ -12,3 +12,7 @@ git clone https://github.com/Bradley-Karat/DiffSimGen.git
 cd DiffSimGen
 poetry install
 ```
+Once installed, the environment can be activated with:
+```
+poetry shell
+```
