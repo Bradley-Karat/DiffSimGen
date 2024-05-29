@@ -36,7 +36,7 @@ class NODDI_watson: #Input to class NODDI is all parameters needed to build the 
         self.par_free_diff = par_free_diff
 
     def make_model(self):
-        
+
         ball = gaussian_models.G1Ball()
         stick = cylinder_models.C1Stick()
         zeppelin = gaussian_models.G2Zeppelin()

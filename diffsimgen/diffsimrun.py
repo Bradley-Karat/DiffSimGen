@@ -2,7 +2,7 @@ from diffsimgen.scripts import helper_functions
 from diffsimgen.scripts import generate_training_data
 import numpy as np
 
-def diffsimrun(model,bval,bvec,S0,SNR,numofsim=100000,noise_type='rician',delta=None,Delta=None,TE=None):
+def diffsimrun(model,bval,bvec,S0,SNR,numofsim=100000,noise_type='rician',delta=None,Delta=None,TE=None,parameter_distributions=[]):
 
   '''
 
@@ -38,6 +38,17 @@ def diffsimrun(model,bval,bvec,S0,SNR,numofsim=100000,noise_type='rician',delta=
     Pulse seperation time in seconds (default=None)
   TE: float (optional)
     Echo time (default=None)
+  parameter_distributions: Array (optional)
+    Array of model parameters which will be used to simulate signal as opposed
+    to uniform sampling on the whole parameter range. Useful if you want to 
+    simulate signal from realistic parameter distributions in the brain. *Note*
+    the index of the parameters in the array provided has to match the order of
+    the parameters seen in the <model>.json file in the resources folder. For
+    example, if you are providing a parameter distribution for the stick model,
+    the array will be [numofparameters,3] where the 0th index is theta, the 1st
+    index is phi, and the 2nd index is Dpar (as seen in stick_parameter_range.json)
+    numofsim samples will be drawn from the provided parameter distributions with
+    replacement.
   Note, if you want to change fixed parameters (for example, in NODDI the free
   diffusivity and parallel diffusivity are fixed) this can be adjusted
   in the models.py file
@@ -70,6 +81,6 @@ def diffsimrun(model,bval,bvec,S0,SNR,numofsim=100000,noise_type='rician',delta=
   noise_type = noise_type
   function = getattr(generate_training_data, f'{model}')
     
-  signal,parameters,parameter_names,signal_noiseless = function(numofsim,acq_scheme,S0arr,SNRarr,noise_type)
+  signal,parameters,parameter_names,signal_noiseless = function(numofsim,acq_scheme,S0arr,SNRarr,noise_type,parameter_distributions)
 
   return signal, signal_noiseless, parameters, parameter_names, SNRarr, S0arr
