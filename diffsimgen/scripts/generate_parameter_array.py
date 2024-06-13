@@ -8,7 +8,6 @@ class generate_model_parameter_array:
     def __init__(self,numofsim,parameter_distributions):
         self.numofsim = numofsim
         self.parameter_distributions = parameter_distributions
-    
     def NODDI_watson(self):
         if len(self.parameter_distributions)==0: #no parameter distribution provided, sample randomly
             
@@ -92,7 +91,6 @@ class generate_model_parameter_array:
     def zeppelin(self):
         if len(self.parameter_distributions)==0:
 
-            ###### CHECK THE PARAMETER RANGE FILE CONTENTS - should Dperp be same range a Dpar?? ######
             with open(f'{pathname}/../../resources/zeppelin_parameter_range.json', 'r') as f:
                 param_range = json.load(f)
             theta = np.random.uniform(param_range['theta'][0],param_range['theta'][1],size=[self.numofsim,1])
