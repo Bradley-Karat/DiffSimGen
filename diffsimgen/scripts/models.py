@@ -96,6 +96,35 @@ class ball:
         
         return ball_model,model_vector
 
+class zeppelin:
+    def __init__(self,mu,Dpar,Dperp):
+        '''
+        Dpar: Zeppelin parallel diffusivity
+        Dperp: Zeppelin perpendicular diffusivity
+        mu: Orientation of zeppelin
+
+        need to make sure that Dpar > Dperp - could set this here (Dpar = np.max(Dpar,Dperp), 
+        or somehow set this in the range file?)
+        '''
+        self.Dpar = Dpar
+        self.Dperp = Dperp
+        self.mu = mu
+        
+        # check that Dpar > Dperp - throw error if not
+        if Dpar < Dperp:
+            raise ValueError('Dpar must be greater than Dperp')
+    
+    def make_model(self):
+        zeppelin = gaussian_models.G2Zeppelin()
+
+        with suppress_stdout():
+            zeppelin_model = MultiCompartmentModel(models=[zeppelin])
+
+        model_vector = zeppelin_model.parameters_to_parameter_vector(
+            G2Zeppelin_1_mu=self.mu,G2Zeppelin_1_lambda_par=self.Dpar,G2Zeppelin_1_lambda_perp=self.Dperp)
+        
+        return zeppelin_model,model_vector
+
 class ball_stick:
     def __init__(self,mu,Dpar,stick_frac,Diso,ball_frac):
         '''

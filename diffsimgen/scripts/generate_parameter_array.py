@@ -8,6 +8,7 @@ class generate_model_parameter_array:
     def __init__(self,numofsim,parameter_distributions):
         self.numofsim = numofsim
         self.parameter_distributions = parameter_distributions
+    
     def NODDI_watson(self):
         if len(self.parameter_distributions)==0: #no parameter distribution provided, sample randomly
             
@@ -80,10 +81,51 @@ class generate_model_parameter_array:
 
             theta = np.random.choice(np.squeeze(self.parameter_distributions[:,0]),size=[self.numofsim,1])
             phi = np.random.choice(np.squeeze(self.parameter_distributions[:,1]),size=[self.numofsim,1])
+            mu = np.c_[theta,phi]
             Dpar = np.random.choice(np.squeeze(self.parameter_distributions[:,2]),size=[self.numofsim,1])
 
             parameter_names = ['theta','phi','Dpar']
             parameter_array = np.c_[mu,Dpar]
+
+        return parameter_array,parameter_names
+    
+    def zeppelin(self):
+        if len(self.parameter_distributions)==0:
+
+            ###### CHECK THE PARAMETER RANGE FILE CONTENTS - should Dperp be same range a Dpar?? ######
+            with open(f'{pathname}/../../resources/zeppelin_parameter_range.json', 'r') as f:
+                param_range = json.load(f)
+            theta = np.random.uniform(param_range['theta'][0],param_range['theta'][1],size=[self.numofsim,1])
+            phi = np.random.uniform(param_range['phi'][0],param_range['phi'][1],size=[self.numofsim,1])
+            mu = np.c_[theta,phi]
+
+            # sample two diffusivities
+            Dpar = np.random.uniform(param_range['Dpar'][0],param_range['Dpar'][1],size=[self.numofsim,1])
+            Dperp = np.random.uniform(param_range['Dperp'][0],param_range['Dperp'][1],size=[self.numofsim,1])
+            D = np.c_[Dpar,Dperp]
+
+            # Enforce constraint Dpar > Dperp
+            Dpar = np.max(D, axis=1)
+            Dperp = np.min(D, axis=1)
+
+            parameter_names = ['theta','phi','Dpar','Dperp']
+            parameter_array = np.c_[mu,Dpar,Dperp]
+
+        elif len(self.parameter_distributions)!=0: #use provided parameter distribution
+
+            theta = np.random.choice(np.squeeze(self.parameter_distributions[:,0]),size=[self.numofsim,1])
+            phi = np.random.choice(np.squeeze(self.parameter_distributions[:,1]),size=[self.numofsim,1])
+            mu = np.c_[theta,phi]
+            Dpar = np.random.choice(np.squeeze(self.parameter_distributions[:,2]),size=[self.numofsim,1])
+            Dperp = np.random.choice(np.squeeze(self.parameter_distributions[:,3]),size=[self.numofsim,1])
+            D = np.c_[Dpar,Dperp]
+
+            # Enforce constraint Dpar > Dperp
+            Dpar = np.max(D, axis=1)
+            Dperp = np.min(D, axis=1)
+
+            parameter_names = ['theta','phi','Dpar','Dperp']
+            parameter_array = np.c_[mu,Dpar,Dperp]
 
         return parameter_array,parameter_names
 
