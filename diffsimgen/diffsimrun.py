@@ -23,7 +23,7 @@ def diffsimrun(model,bval,bvec,SNR,output=None,numofsim=100000,noise_type='ricia
     Output path/filename for saving as a .pkl. If none specified saves in 
     current working directory.
   SNR: float or array
-    Signal to noise ratio. Example -> 40, [10,50], [10,20,30,40,50]
+    Signal to noise ratio. Example -> [40], [10,50], [10,20,30,40,50]
     If you specify two SNR values ([10,100])
     then a random SNR value will be drawn within that range with equal probability.
     This can help if you want to cover the range of signals that might be present
@@ -65,7 +65,7 @@ def diffsimrun(model,bval,bvec,SNR,output=None,numofsim=100000,noise_type='ricia
 
   '''
 
-  if type(SNR) == int or len(SNR) == 1:
+  if len(SNR) == 1:
     SNRarr = np.tile(SNR,numofsim)
   elif len(SNR) == 2:
     SNRarr = np.random.uniform(SNR[0],SNR[1],size=[numofsim,1]) #if len(SNR) == 2 then assume that someone wants to randomly sample SNR between low and high
