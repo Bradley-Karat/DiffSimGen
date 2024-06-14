@@ -8,19 +8,18 @@ class simulate_SNR_signal:
   def __init__(self,model,parametervector,S0,SNR,acq_scheme,noise_type):
     self.model = model
     self.parametervector = parametervector
-    self.S0 = S0
     self.SNR = SNR
     self.acq_scheme = acq_scheme
     self.noise_type = noise_type
   def simulate_true_signal(self):
     self.numofdata = self.acq_scheme.number_of_measurements
     self.simulated_data = np.empty((self.numofdata))
-    self.simulated_data = self.model.simulate_signal(self.acq_scheme,self.parametervector)*self.S0 #multiply by self.S0 here if want signal 
+    self.simulated_data = self.model.simulate_signal(self.acq_scheme,self.parametervector) #multiply by self.S0 here if want signal 
     #on original scale defined by S0. Need to do this before adding noise
     return self.simulated_data
   def simulate_noisy_signal(self):
     self.numofdata = self.acq_scheme.number_of_measurements
-    sigma = self.S0 / self.SNR #SNR = S0 / std(noise)
+    sigma = 1 / self.SNR #SNR = S0 / std(noise)
     if self.noise_type == 'rician':
       real = self.simulate_true_signal() + np.random.normal(0, sigma, size=self.numofdata)
       imag = np.random.normal(0, sigma, size=self.numofdata)

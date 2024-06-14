@@ -1,8 +1,9 @@
 from diffsimgen.scripts import helper_functions
 from diffsimgen.scripts import generate_training_data
 import numpy as np
+import os
 
-def diffsimrun(model,bval,bvec,S0,SNR,numofsim=100000,noise_type='rician',delta=None,Delta=None,TE=None,parameter_distributions=[]):
+def diffsimrun(model,bval,bvec,SNR,output=None,numofsim=100000,noise_type='rician',delta=None,Delta=None,TE=None,parameter_distributions=[]):
 
   '''
 
@@ -16,17 +17,16 @@ def diffsimrun(model,bval,bvec,S0,SNR,numofsim=100000,noise_type='rician',delta=
     path to .bval file or numpy array with bvalues.
   bvec: str or array (N,3)
     path to .bvec file or numpy array with bvectors.
-  S0: float or array 
-    Unweights signal value (b0). Example -> 100, [10,100], [10,20,30,40,50]
-    This can be a single value or array. If you specify two S0 values ([10,100])
-    then a random S0 value will be drawn within that range with equal probability.
-    This can help if you want to cover the range of signals that might be present
-    on a voxel-to-voxel basis. If you have multi-shell data, then you can specify
-    the signal at each shell ([10,20,30,40,50]), then the data will be simulated
-    using only those specified values. 
+  output: str
+    Output path for saving. If none specified saves in current working directory.
   SNR: float or array
     Signal to noise ratio. Example -> 40, [10,50], [10,20,30,40,50]
-    Idea is the same as the S0 variable above.
+    If you specify two SNR values ([10,100])
+    then a random SNR value will be drawn within that range with equal probability.
+    This can help if you want to cover the range of signals that might be present
+    on a voxel-to-voxel basis. If you have multi-shell data, then you can specify
+    the SNR at each shell ([10,20,30,40,50]), then the data will be simulated
+    using only those specified values. 
   numofsim: int
     Number of simulations to perform (i.e. how many random microstructural
     environments should data be simulated from) (default=100000).
@@ -54,12 +54,11 @@ def diffsimrun(model,bval,bvec,S0,SNR,numofsim=100000,noise_type='rician',delta=
   in the models.py file
 
   returns:
-    - Noisy signal
-    - Ground-truth (noiseless) signal
+    - Normalized noisy signal
+    - Normalized ground-truth (noiseless) signal
     - Microstructure parameters
     - Name of the microstructural parameters
-    - SNR used for each simulation
-    - S0 used for each simulation
+    - SNR used for each simulation    
     
   '''
 
@@ -83,4 +82,12 @@ def diffsimrun(model,bval,bvec,S0,SNR,numofsim=100000,noise_type='rician',delta=
     
   signal,parameters,parameter_names,signal_noiseless = function(numofsim,acq_scheme,S0arr,SNRarr,noise_type,parameter_distributions)
 
-  return signal, signal_noiseless, parameters, parameter_names, SNRarr, S0arr
+  modeldict = {"signal":signal,"signal_noiseless":signal_noiseless,"parameters":parameters,"parameter_names":parameter_names,"SNRarr":SNRarr}
+  
+  if output==None:
+    output = os.getcwd()
+
+  with open(output, 'wb') as fp:
+    pickle.dump(modeldict, fp)
+
+  return signal, signal_noiseless, parameters, parameter_names, SNRarr
