@@ -28,14 +28,14 @@ def NODDI_watson(numofsim,acq_scheme,S0arr,SNRarr,noise_type,parameter_distribut
   return simulated_data,parameter_array,parameter_names,simulated_data_nonoise
 
 
-def ball(numofsim,acq_scheme,S0arr,SNRarr,noise_type): #Generate random array of ball parameters to then get our simulated signals
+def ball(numofsim,acq_scheme,S0arr,SNRarr,noise_type,parameter_distributions): #Generate random array of ball parameters to then get our simulated signals
 
   numofacq = acq_scheme.number_of_measurements
   simulated_data = np.empty((numofsim,numofacq))
   simulated_data_nonoise = np.empty((numofsim,numofacq))
   noise_type = noise_type
 
-  parameter_array,parameter_names = generate_model_parameter_array(numofsim).ball()
+  parameter_array,parameter_names = generate_model_parameter_array(numofsim,parameter_distributions).ball()
 
   for ii in range(numofsim):
     Diso = parameter_array[ii]
@@ -48,14 +48,14 @@ def ball(numofsim,acq_scheme,S0arr,SNRarr,noise_type): #Generate random array of
   return simulated_data,parameter_array,parameter_names,simulated_data_nonoise
 
 
-def stick(numofsim,acq_scheme,S0arr,SNRarr,noise_type): #Generate random array of stick parameters to then get our simulated signals
+def stick(numofsim,acq_scheme,S0arr,SNRarr,noise_type,parameter_distributions): #Generate random array of stick parameters to then get our simulated signals
 
   numofacq = acq_scheme.number_of_measurements
   simulated_data = np.empty((numofsim,numofacq))
   simulated_data_nonoise = np.empty((numofsim,numofacq))
   noise_type = noise_type
 
-  parameter_array,parameter_names = generate_model_parameter_array(numofsim).stick() 
+  parameter_array,parameter_names = generate_model_parameter_array(numofsim,parameter_distributions).stick() 
 
   for ii in range(numofsim):
     mu = parameter_array[ii,0:2]
@@ -68,14 +68,33 @@ def stick(numofsim,acq_scheme,S0arr,SNRarr,noise_type): #Generate random array o
 
   return simulated_data,parameter_array,parameter_names,simulated_data_nonoise
 
+def zeppelin(numofsim,acq_scheme,S0arr,SNRarr,noise_type,parameter_distributions): #Generate random array of zeppelin parameters to then get our simulated signals
 
-def ball_stick(numofsim,acq_scheme,S0arr,SNRarr,noise_type): 
   numofacq = acq_scheme.number_of_measurements
   simulated_data = np.empty((numofsim,numofacq))
   simulated_data_nonoise = np.empty((numofsim,numofacq))
   noise_type = noise_type
 
-  parameter_array,parameter_names = generate_model_parameter_array(numofsim).ball_stick() 
+  parameter_array,parameter_names = generate_model_parameter_array(numofsim,parameter_distributions).zeppelin() 
+
+  for ii in range(numofsim):
+    mu = parameter_array[ii,0:2]
+    Dpar = parameter_array[ii,2]
+    Dperp = parameter_array[ii,3]
+
+    model,param_vector = models.zeppelin(mu,Dpar,Dperp).make_model()
+    simulated_data[ii,:] = simulate_signal.simulate_SNR_signal(model,param_vector,S0arr[ii],SNRarr[ii],acq_scheme,noise_type).simulate_noisy_signal()
+    simulated_data_nonoise[ii,:] = simulate_signal.simulate_SNR_signal(model,param_vector,S0arr[ii],SNRarr[ii],acq_scheme,noise_type).simulate_true_signal()
+
+  return simulated_data,parameter_array,parameter_names,simulated_data_nonoise
+
+def ball_stick(numofsim,acq_scheme,S0arr,SNRarr,noise_type,parameter_distributions): 
+  numofacq = acq_scheme.number_of_measurements
+  simulated_data = np.empty((numofsim,numofacq))
+  simulated_data_nonoise = np.empty((numofsim,numofacq))
+  noise_type = noise_type
+
+  parameter_array,parameter_names = generate_model_parameter_array(numofsim,parameter_distributions).ball_stick() 
 
   for ii in range(numofsim):
     mu = parameter_array[ii,0:2]

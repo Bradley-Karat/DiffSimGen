@@ -13,6 +13,7 @@ def diffsimrun(model,bval,bvec,SNR,output=None,numofsim=100000,noise_type='ricia
   - ball
   - stick
   - ball_stick
+  - zeppelin
   bval: str or array (N,)
     path to .bval file or numpy array with bvalues.
   bvec: str or array (N,3)
