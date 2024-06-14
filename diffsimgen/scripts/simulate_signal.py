@@ -5,7 +5,7 @@ import os
 import sys
 
 class simulate_SNR_signal:
-  def __init__(self,model,parametervector,S0,SNR,acq_scheme,noise_type):
+  def __init__(self,model,parametervector,SNR,acq_scheme,noise_type):
     self.model = model
     self.parametervector = parametervector
     self.SNR = SNR
