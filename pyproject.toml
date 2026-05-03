@@ -11,7 +11,7 @@ diffsimgen = "diffsimgen.run:main"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-numpy = ">=1.21.0"
+numpy = ">=1.13"
 nibabel = ">=3.2.1"
 #dmipy = ">=1.0.5"
 dmipy = { git = "https://github.com/Bradley-Karat/dmipy.git" }
