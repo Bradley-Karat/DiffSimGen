@@ -44,6 +44,13 @@ class generate_model_parameter_array:
 
         return parameter_array,parameter_names
 
+    def SANDI(self):
+
+        parameter_names = ['fneurite','fsoma','Din','Rsoma','De']
+        parameter_array = self.parameter_distributions
+
+        return parameter_array,parameter_names
+
     def ball(self):
         if len(self.parameter_distributions)==0: #no parameter distribution provided, sample randomly
 
@@ -162,3 +169,30 @@ class generate_model_parameter_array:
             parameter_array = np.c_[mu,Dpar,Diso,stickfrac,ballfrac]
 
         return parameter_array,parameter_names
+        
+    def zeppelin_stick(self):
+        if len(self.parameter_distributions)==0: #no parameter distribution provided, sample randomly
+
+            with open(f'{pathname}/../../resources/zeppelin_stick_parameter_range.json', 'r') as f:
+                param_range = json.load(f)
+            theta = np.random.uniform(param_range['theta'][0],param_range['theta'][1],size=[self.numofsim,1])
+            phi = np.random.uniform(param_range['phi'][0],param_range['phi'][1],size=[self.numofsim,1])
+            mu = np.c_[theta,phi]
+            Dpar = np.random.uniform(param_range['Dpar'][0],param_range['Dpar'][1],size=[self.numofsim,1])
+            stickfrac = np.random.uniform(param_range['stickfrac'][0],param_range['stickfrac'][1],size=[self.numofsim,1])
+
+            parameter_names = ['theta','phi','Dpar','stick_fraction']
+            parameter_array = np.c_[mu,Dpar,stickfrac]
+
+        elif len(self.parameter_distributions)!=0: #use provided parameter distribution
+
+            theta = np.random.choice(np.squeeze(self.parameter_distributions[:,0]),size=[self.numofsim,1])
+            phi = np.random.choice(np.squeeze(self.parameter_distributions[:,1]),size=[self.numofsim,1])
+            mu = np.c_[theta,phi]
+            Dpar = np.random.choice(np.squeeze(self.parameter_distributions[:,2]),size=[self.numofsim,1])
+            stickfrac = np.random.choice(np.squeeze(self.parameter_distributions[:,3]),size=[self.numofsim,1])
+            
+            parameter_names = ['theta','phi','Dpar','stick_fraction']
+            parameter_array = np.c_[mu,Dpar,stickfrac]
+
+        return parameter_array,parameter_names  

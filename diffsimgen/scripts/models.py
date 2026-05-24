@@ -1,6 +1,6 @@
 import dmipy
 from dmipy.signal_models import cylinder_models, gaussian_models
-from dmipy.distributions.distribute_models import SD1WatsonDistributed
+from dmipy.distributions.distribute_models import SD1WatsonDistributed, BundleModel
 from dmipy.core.modeling_framework import MultiCompartmentModel
 from contextlib import contextmanager
 import os
@@ -152,3 +152,31 @@ class ball_stick:
             partial_volume_1=self.stick_frac,G1Ball_1_lambda_iso=self.Diso)
         
         return ball_stick_model,model_vector
+        
+class zeppelin_stick:
+    def __init__(self,mu,Dpar,stick_frac):
+        '''
+        mu: Orientation of stick & zeppelin
+        Dpar: Stick & zeppelin parallel diffusivity
+        stick_frac: stick signal fraction
+        '''
+        self.mu = mu
+        self.Dpar = Dpar
+        self.stick_frac = stick_frac
+
+    def make_model(self):
+        stick = cylinder_models.C1Stick()
+        zeppelin = gaussian_models.G2Zeppelin()
+
+        with suppress_stdout():
+            bundle = BundleModel([stick, zeppelin])
+            bundle.set_tortuous_parameter('G2Zeppelin_1_lambda_perp',
+                'C1Stick_1_lambda_par','partial_volume_0')
+            bundle.set_equal_parameter('G2Zeppelin_1_lambda_par', 'C1Stick_1_lambda_par')
+            bundle.set_equal_parameter('C1Stick_1_mu', 'G2Zeppelin_1_mu')            
+            zeppelin_stick_model = MultiCompartmentModel(models=[bundle])
+        
+        model_vector = zeppelin_stick_model.parameters_to_parameter_vector(BundleModel_1_C1Stick_1_mu=self.mu,
+            BundleModel_1_G2Zeppelin_1_lambda_par=self.Dpar,BundleModel_1_partial_volume_0=self.stick_frac)
+        
+        return zeppelin_stick_model,model_vector   

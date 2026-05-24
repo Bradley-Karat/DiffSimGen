@@ -10,11 +10,13 @@ def diffsimrun(model,bval,bvec,SNR,output=None,numofsim=100000,noise_type='ricia
 
   Function for generating training data (signal and microstructure parameters)
   Current models accepted:
+  - SANDI
   - NODDI_watson
   - ball
   - stick
   - ball_stick
   - zeppelin
+  - zeppelin_stick
   bval: str or array (N,)
     path to .bval file or numpy array with bvalues.
   bvec: str or array (N,3)
@@ -35,9 +37,9 @@ def diffsimrun(model,bval,bvec,SNR,output=None,numofsim=100000,noise_type='ricia
     environments should data be simulated from) (default=100000).
   noise_type: str
     Type of noise to inject. One of 'rician' or 'gaussian'
-  delta: float (optional)
+  delta: float (optional unless SANDI model chosen)
     Pulse duration time in seconds (default=None)
-  Delta: float (optional)
+  Delta: float (optional unless SANDI model chosen)
     Pulse seperation time in seconds (default=None)
   TE: float (optional)
     Echo time (default=None)
@@ -72,19 +74,40 @@ def diffsimrun(model,bval,bvec,SNR,output=None,numofsim=100000,noise_type='ricia
   else:
     SNRarr = np.tile(SNR,int(np.ceil(numofsim/len(SNR)))) #if len(SNR) > 2 then assume that someone wants to generate signal using the provided SNR values
   
-  acq_scheme = helper_functions.get_acq_scheme(bval,bvec,delta,Delta,TE)
+  #acq_scheme = helper_functions.get_acq_scheme(bval,bvec,delta,Delta,TE)
+  acq_scheme = helper_functions.get_acq_scheme(bval,bvec)
+
   noise_type = noise_type
   function = getattr(generate_training_data, f'{model}')
-    
-  signal,parameters,parameter_names,signal_noiseless = function(numofsim,acq_scheme,SNRarr,noise_type,parameter_distributions)
 
-  modeldict = {"signal":signal,"signal_noiseless":signal_noiseless,"parameters":parameters,"parameter_names":parameter_names,"SNRarr":SNRarr}
+  if model=='SANDI': # SANDI has some extra considerations for simulating signal. Provide powder averaged and directional signal
+    if np.logical_or(delta==None,Delta==None):
+      raise TypeError("SANDI model was chosen but delta and/or Delta were not specified. These are required to fit the SANDI model.")
+    else:
+        signal_directional,signal_powder_avg,parameters,parameter_names,signal_noiseless = function(numofsim,bval,bvec,delta,Delta,SNRarr,noise_type,parameter_distributions)
+
+        modeldict = {"signal":signal_directional,"signal_podwer_avg":signal_powder_avg,"signal_noiseless":signal_noiseless,"parameters":parameters,"parameter_names":parameter_names,"SNRarr":SNRarr}
   
-  if output==None:
-    fpath = os.getcwd()
-    output = f'{fpath}/{model}_diffusion_simulations.pkl' 
+        if output==None:
+          fpath = os.getcwd()
+          output = f'{fpath}/{model}_diffusion_simulations.pkl' 
 
-  with open(output, 'wb') as fp:
-    pickle.dump(modeldict, fp)
+        with open(output, 'wb') as fp:
+          pickle.dump(modeldict, fp)
 
-  return signal, signal_noiseless, parameters, parameter_names, SNRarr
+        return signal_directional, signal_powder_avg, signal_noiseless, parameters, parameter_names, SNRarr
+
+  else:
+
+    signal,parameters,parameter_names,signal_noiseless = function(numofsim,acq_scheme,SNRarr,noise_type,parameter_distributions)
+
+    modeldict = {"signal":signal,"signal_noiseless":signal_noiseless,"parameters":parameters,"parameter_names":parameter_names,"SNRarr":SNRarr}
+  
+    if output==None:
+      fpath = os.getcwd()
+      output = f'{fpath}/{model}_diffusion_simulations.pkl' 
+
+    with open(output, 'wb') as fp:
+      pickle.dump(modeldict, fp)
+
+    return signal, signal_noiseless, parameters, parameter_names, SNRarr

@@ -1,0 +1,2 @@
+# SANDI parameter range is more complex and derived from the diffusion time
+#{"stickfrac": [0.01, 0.99], "spherefrac": [0.01, 0.99], "spherefrac": [0.01, 0.99]}
