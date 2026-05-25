@@ -11,7 +11,7 @@ class generate_model_parameter_array:
     def NODDI_watson(self):
         if len(self.parameter_distributions)==0: #no parameter distribution provided, sample randomly
             
-            with open(f'{pathname}/../../resources/NODDI_watson_parameter_range.json', 'r') as f:
+            with open(f'{pathname}/../resources/NODDI_watson_parameter_range.json', 'r') as f:
                 param_range = json.load(f)
             theta = np.random.uniform(param_range['theta'][0],param_range['theta'][1],size=[self.numofsim,1])
             phi = np.random.uniform(param_range['phi'][0],param_range['phi'][1],size=[self.numofsim,1])
@@ -54,7 +54,7 @@ class generate_model_parameter_array:
     def ball(self):
         if len(self.parameter_distributions)==0: #no parameter distribution provided, sample randomly
 
-            with open(f'{pathname}/../../resources/ball_parameter_range.json', 'r') as f:
+            with open(f'{pathname}/../resources/ball_parameter_range.json', 'r') as f:
                 param_range = json.load(f)
             Diso = np.random.uniform(param_range['Diso'][0],param_range['Diso'][1],size=[self.numofsim,1])
 
@@ -73,7 +73,7 @@ class generate_model_parameter_array:
     def stick(self):
         if len(self.parameter_distributions)==0: #no parameter distribution provided, sample randomly
 
-            with open(f'{pathname}/../../resources/stick_parameter_range.json', 'r') as f:
+            with open(f'{pathname}/../resources/stick_parameter_range.json', 'r') as f:
                 param_range = json.load(f)
             theta = np.random.uniform(param_range['theta'][0],param_range['theta'][1],size=[self.numofsim,1])
             phi = np.random.uniform(param_range['phi'][0],param_range['phi'][1],size=[self.numofsim,1])
@@ -98,7 +98,7 @@ class generate_model_parameter_array:
     def zeppelin(self):
         if len(self.parameter_distributions)==0:
 
-            with open(f'{pathname}/../../resources/zeppelin_parameter_range.json', 'r') as f:
+            with open(f'{pathname}/../resources/zeppelin_parameter_range.json', 'r') as f:
                 param_range = json.load(f)
             theta = np.random.uniform(param_range['theta'][0],param_range['theta'][1],size=[self.numofsim,1])
             phi = np.random.uniform(param_range['phi'][0],param_range['phi'][1],size=[self.numofsim,1])
@@ -137,7 +137,7 @@ class generate_model_parameter_array:
     def ball_stick(self):
         if len(self.parameter_distributions)==0: #no parameter distribution provided, sample randomly
 
-            with open(f'{pathname}/../../resources/ball_stick_parameter_range.json', 'r') as f:
+            with open(f'{pathname}/../resources/ball_stick_parameter_range.json', 'r') as f:
                 param_range = json.load(f)
             theta = np.random.uniform(param_range['theta'][0],param_range['theta'][1],size=[self.numofsim,1])
             phi = np.random.uniform(param_range['phi'][0],param_range['phi'][1],size=[self.numofsim,1])
@@ -173,7 +173,7 @@ class generate_model_parameter_array:
     def zeppelin_stick(self):
         if len(self.parameter_distributions)==0: #no parameter distribution provided, sample randomly
 
-            with open(f'{pathname}/../../resources/zeppelin_stick_parameter_range.json', 'r') as f:
+            with open(f'{pathname}/../resources/zeppelin_stick_parameter_range.json', 'r') as f:
                 param_range = json.load(f)
             theta = np.random.uniform(param_range['theta'][0],param_range['theta'][1],size=[self.numofsim,1])
             phi = np.random.uniform(param_range['phi'][0],param_range['phi'][1],size=[self.numofsim,1])
