@@ -4,7 +4,7 @@ import numpy as np
 import pickle
 import os
 
-def diffsimrun(model,bval,bvec,SNR,output=None,numofsim=100000,noise_type='rician',delta=None,Delta=None,TE=None,parameter_distributions=[]):
+def diffsimrun(model,bval,bvec,SNR,output='Default',numofsim=100000,noise_type='rician',delta=None,Delta=None,TE=None,parameter_distributions=[]):
 
   '''
 
@@ -22,8 +22,8 @@ def diffsimrun(model,bval,bvec,SNR,output=None,numofsim=100000,noise_type='ricia
   bvec: str or array (N,3)
     path to .bvec file or numpy array with bvectors.
   output: str
-    Output path/filename for saving as a .pkl. If none specified saves in 
-    current working directory.
+    Output path/filename for saving as a .pkl. If 'Default' saves in 
+    current working directory. If None does not save.
   SNR: float or array
     Signal to noise ratio. Example -> [40], [10,50], [10,20,30,40,50]
     If you specify two SNR values ([10,100])
@@ -87,13 +87,14 @@ def diffsimrun(model,bval,bvec,SNR,output=None,numofsim=100000,noise_type='ricia
         signal_directional,signal_powder_avg,parameters,parameter_names,signal_noiseless = function(numofsim,bval,bvec,delta,Delta,SNRarr,noise_type,parameter_distributions)
 
         modeldict = {"signal":signal_directional,"signal_podwer_avg":signal_powder_avg,"signal_noiseless":signal_noiseless,"parameters":parameters,"parameter_names":parameter_names,"SNRarr":SNRarr}
-  
-        if output==None:
-          fpath = os.getcwd()
-          output = f'{fpath}/{model}_diffusion_simulations.pkl' 
 
-        with open(output, 'wb') as fp:
-          pickle.dump(modeldict, fp)
+        if output not None:
+          if output=="Default":
+            fpath = os.getcwd()
+            output = f'{fpath}/{model}_diffusion_simulations.pkl' 
+            
+          with open(output, 'wb') as fp:
+            pickle.dump(modeldict, fp)
 
         return signal_directional, signal_powder_avg, signal_noiseless, parameters, parameter_names, SNRarr
 
@@ -103,11 +104,12 @@ def diffsimrun(model,bval,bvec,SNR,output=None,numofsim=100000,noise_type='ricia
 
     modeldict = {"signal":signal,"signal_noiseless":signal_noiseless,"parameters":parameters,"parameter_names":parameter_names,"SNRarr":SNRarr}
   
-    if output==None:
-      fpath = os.getcwd()
-      output = f'{fpath}/{model}_diffusion_simulations.pkl' 
-
-    with open(output, 'wb') as fp:
-      pickle.dump(modeldict, fp)
+      if output not None:
+        if output=="Default":
+          fpath = os.getcwd()
+          output = f'{fpath}/{model}_diffusion_simulations.pkl' 
+          
+        with open(output, 'wb') as fp:
+          pickle.dump(modeldict, fp)
 
     return signal, signal_noiseless, parameters, parameter_names, SNRarr
