@@ -88,7 +88,7 @@ def diffsimrun(model,bval,bvec,SNR,output='Default',numofsim=100000,noise_type='
 
         modeldict = {"signal":signal_directional,"signal_podwer_avg":signal_powder_avg,"signal_noiseless":signal_noiseless,"parameters":parameters,"parameter_names":parameter_names,"SNRarr":SNRarr}
 
-        if output not None:
+        if output!=None:
           if output=="Default":
             fpath = os.getcwd()
             output = f'{fpath}/{model}_diffusion_simulations.pkl' 
@@ -104,7 +104,7 @@ def diffsimrun(model,bval,bvec,SNR,output='Default',numofsim=100000,noise_type='
 
     modeldict = {"signal":signal,"signal_noiseless":signal_noiseless,"parameters":parameters,"parameter_names":parameter_names,"SNRarr":SNRarr}
   
-      if output not None:
+      if output!=None:
         if output=="Default":
           fpath = os.getcwd()
           output = f'{fpath}/{model}_diffusion_simulations.pkl' 
