@@ -104,12 +104,12 @@ def diffsimrun(model,bval,bvec,SNR,output='Default',numofsim=100000,noise_type='
 
     modeldict = {"signal":signal,"signal_noiseless":signal_noiseless,"parameters":parameters,"parameter_names":parameter_names,"SNRarr":SNRarr}
   
-      if output!=None:
-        if output=="Default":
-          fpath = os.getcwd()
-          output = f'{fpath}/{model}_diffusion_simulations.pkl' 
+    if output!=None:
+      if output=="Default":
+        fpath = os.getcwd()
+        output = f'{fpath}/{model}_diffusion_simulations.pkl' 
           
-        with open(output, 'wb') as fp:
-          pickle.dump(modeldict, fp)
+      with open(output, 'wb') as fp:
+        pickle.dump(modeldict, fp)
 
     return signal, signal_noiseless, parameters, parameter_names, SNRarr
