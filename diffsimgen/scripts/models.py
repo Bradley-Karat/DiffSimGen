@@ -16,6 +16,9 @@ def suppress_stdout():
         finally:
             sys.stdout = old_stdout
 
+# Note, SANDI model is not included in this file since it is built manually and 
+# not with DMIPY.
+
 class NODDI_watson: #Input to class NODDI is all parameters needed to build the NODDI model
     def __init__(self,mu,ODI,watson_stick_frac,ball_frac,watson_frac,ball_diff=3e-9,par_free_diff=1.7e-9):
         '''
